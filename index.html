@@ -1,0 +1,326 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Search, 
+  ExternalLink, 
+  Plus, 
+  Trophy, 
+  Zap, 
+  Bell, 
+  TrendingUp,
+  AlertTriangle,
+  Award,
+  Box,
+  LayoutDashboard,
+  RefreshCcw,
+  Globe,
+  Star,
+  Link2,
+  Edit3,
+  Check,
+  X,
+  Save,
+  Image as ImageIcon,
+  Trash2,
+  Home,
+  ShieldCheck,
+  MousePointer2,
+  ShoppingBag,
+  MoreVertical,
+  ArrowUpRight
+} from 'lucide-react';
+
+/**
+ * VISUALIZACIÓN PREMIUM SHOP-FIX ADMIN
+ * Identidad: OnlineStoreTemu.com
+ * Características: Gamificación activa, Gestión de Stock, Estilo Temu 2026.
+ */
+
+const App = () => {
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('home');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [notification, setNotification] = useState(null);
+  const [syncing, setSyncing] = useState(false);
+  
+  const [userData, setUserData] = useState({
+    name: "Partner Premium",
+    xp: 3450,
+    level: 4,
+    rank: "Master de Inventario",
+    totalSales: 215,
+    todayRevenue: 450.20
+  });
+
+  const [products, setProducts] = useState([
+    {
+      id: "OST-5SQ",
+      name: "Proyector Galaxia LED Pro",
+      price: 2.98,
+      stock: 1250,
+      image: "https://images.unsplash.com/photo-1534073828943-f801091bb18c?w=400&q=80",
+      category: "Iluminación",
+      isHot: true
+    },
+    {
+      id: "OST-Z2",
+      name: "Smartwatch Deportivo Z2",
+      price: 1.20,
+      stock: 3,
+      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80",
+      category: "Gadgets",
+      isHot: false
+    }
+  ]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const triggerNotif = (text, type = 'info') => {
+    setNotification({ text, type });
+    setTimeout(() => setNotification(null), 3000);
+  };
+
+  const handleSale = (id) => {
+    setProducts(prev => prev.map(p => {
+      if (p.id === id) {
+        if (p.stock <= 0) return p;
+        const newStock = p.stock - 1;
+        if (newStock === 2) triggerNotif("¡Stock casi agotado!", "error");
+        setUserData(u => ({ ...u, xp: u.xp + 50, totalSales: u.totalSales + 1 }));
+        return { ...p, stock: newStock };
+      }
+      return p;
+    }));
+    triggerNotif("Venta registrada +50 XP", "success");
+  };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-[#FF4D00] text-white">
+        <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center animate-bounce mb-4 shadow-2xl">
+          <ShoppingBag className="text-[#FF4D00] w-8 h-8" />
+        </div>
+        <h2 className="text-xl font-black italic tracking-tighter">SHOP-FIX</h2>
+        <div className="mt-4 w-12 h-1 bg-white/20 rounded-full overflow-hidden">
+          <div className="h-full bg-white animate-[loading_1.5s_ease-in-out_infinite]"></div>
+        </div>
+        <style>{`@keyframes loading { 0% { width: 0; } 100% { width: 100%; } }`}</style>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-zinc-100 flex items-center justify-center p-4 font-sans">
+      {/* Mockup de Teléfono */}
+      <div className="w-[380px] h-[780px] bg-white rounded-[3rem] border-[8px] border-zinc-900 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] overflow-hidden relative flex flex-col">
+        
+        {/* Notch / Barra de Estado */}
+        <div className="h-7 bg-zinc-900 w-32 absolute top-0 left-1/2 -translate-x-1/2 rounded-b-2xl z-50"></div>
+        
+        {/* Notificaciones Flotantes */}
+        {notification && (
+          <div className="absolute top-12 left-4 right-4 z-[60] animate-in slide-in-from-top-4 duration-300">
+            <div className={`p-4 rounded-2xl shadow-xl flex items-center gap-3 border-b-4 border-black/10 ${notification.type === 'error' ? 'bg-red-500' : 'bg-[#FF4D00]'} text-white`}>
+              <Zap size={16} fill="white" />
+              <p className="text-[10px] font-black uppercase italic tracking-wider">{notification.text}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Header Estilo Temu */}
+        <div className="bg-[#FF4D00] p-6 pt-12 pb-8 rounded-b-[2.5rem] shadow-lg relative overflow-hidden">
+            <div className="absolute -right-4 -top-4 opacity-10 rotate-12">
+                <ShoppingBag size={120} color="white" />
+            </div>
+            
+            <div className="flex justify-between items-center relative z-10">
+                <div className="flex items-center gap-3">
+                    <div className="bg-white p-2 rounded-xl shadow-md rotate-3">
+                        <Zap size={18} className="text-[#FF4D00]" fill="currentColor" />
+                    </div>
+                    <div>
+                        <h1 className="text-white text-lg font-black italic tracking-tighter uppercase leading-none">Shop-Fix</h1>
+                        <p className="text-white/60 text-[7px] font-bold uppercase tracking-[0.2em]">OnlineStoreTemu.com</p>
+                    </div>
+                </div>
+                <div className="flex gap-2">
+                    <button className="bg-white/20 p-2 rounded-full text-white backdrop-blur-md">
+                        <Bell size={18} />
+                    </button>
+                    <div className="w-10 h-10 rounded-full border-2 border-white/30 overflow-hidden bg-white/10 flex items-center justify-center">
+                        <span className="text-white text-[10px] font-black">AD</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Status Card (XP) */}
+            <div className="mt-6 bg-white rounded-3xl p-4 shadow-xl flex items-center justify-between border border-orange-100 relative z-10">
+                <div className="flex items-center gap-3">
+                    <div className="relative">
+                        <div className="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center">
+                            <Trophy size={20} className="text-orange-500" />
+                        </div>
+                        <span className="absolute -bottom-1 -right-1 bg-zinc-900 text-white text-[8px] px-1.5 py-0.5 rounded-lg font-black italic">LV.4</span>
+                    </div>
+                    <div>
+                        <p className="text-[9px] font-black text-zinc-400 uppercase tracking-widest leading-none">Nivel Partner</p>
+                        <p className="text-md font-black text-zinc-800 italic">{userData.xp} XP</p>
+                        <div className="w-20 bg-zinc-100 h-1 rounded-full mt-1 overflow-hidden">
+                            <div className="bg-orange-500 h-full w-[65%]"></div>
+                        </div>
+                    </div>
+                </div>
+                <div className="text-right border-l border-zinc-100 pl-4">
+                    <p className="text-[8px] font-black text-zinc-400 uppercase leading-none mb-1">Hoy</p>
+                    <p className="text-sm font-black text-[#FF4D00]">${userData.todayRevenue}</p>
+                </div>
+            </div>
+        </div>
+
+        {/* Cuerpo de la App */}
+        <main className="flex-1 overflow-y-auto p-6 space-y-6 pb-28">
+            {activeTab === 'home' && (
+                <div className="space-y-6 animate-in fade-in duration-500">
+                    {/* Hero Section */}
+                    <div className="bg-zinc-900 rounded-[2.5rem] p-6 text-white relative overflow-hidden shadow-2xl">
+                        <div className="relative z-10">
+                            <div className="flex items-center gap-2 mb-2">
+                                <Star size={12} className="text-orange-500" fill="currentColor" />
+                                <span className="text-[9px] font-black uppercase tracking-widest text-orange-500">Evento de Temporada</span>
+                            </div>
+                            <h2 className="text-2xl font-black italic uppercase leading-none mb-4 tracking-tighter">Liquidación<br/>Primavera '26</h2>
+                            <button className="bg-[#FF4D00] text-white px-5 py-2.5 rounded-xl text-[9px] font-black uppercase flex items-center gap-2 active:scale-95 transition-transform">
+                                Gestionar Campaña <ArrowUpRight size={14} />
+                            </button>
+                        </div>
+                        <div className="absolute -right-6 -bottom-6 opacity-30 transform rotate-12">
+                            <TrendingUp size={120} />
+                        </div>
+                    </div>
+
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-white p-5 rounded-[2rem] border border-zinc-100 shadow-sm flex flex-col gap-3">
+                            <div className="bg-green-50 w-10 h-10 rounded-2xl flex items-center justify-center">
+                                <TrendingUp size={20} className="text-green-600" />
+                            </div>
+                            <div>
+                                <p className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">Ventas</p>
+                                <p className="text-lg font-black text-zinc-800 tracking-tighter">{userData.totalSales}</p>
+                            </div>
+                        </div>
+                        <div className="bg-white p-5 rounded-[2rem] border border-zinc-100 shadow-sm flex flex-col gap-3">
+                            <div className="bg-orange-50 w-10 h-10 rounded-2xl flex items-center justify-center">
+                                <Box size={20} className="text-orange-600" />
+                            </div>
+                            <div>
+                                <p className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">Items</p>
+                                <p className="text-lg font-black text-zinc-800 tracking-tighter">2.4k</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Quick Access */}
+                    <div className="bg-white rounded-[2rem] border border-zinc-100 p-2 flex flex-col">
+                        <a href="https://onlinestoretemu.com/" target="_blank" className="flex items-center justify-between p-4 hover:bg-zinc-50 rounded-2xl transition-colors">
+                            <div className="flex items-center gap-3">
+                                <div className="bg-blue-50 p-2.5 rounded-xl text-blue-600">
+                                    <Globe size={18} />
+                                </div>
+                                <p className="text-[11px] font-black text-zinc-800 uppercase italic">Ver Tienda Online</p>
+                            </div>
+                            <ExternalLink size={14} className="text-zinc-300" />
+                        </a>
+                    </div>
+                </div>
+            )}
+
+            {activeTab === 'inventory' && (
+                <div className="space-y-4 animate-in slide-in-from-right-4 duration-300">
+                    <div className="flex justify-between items-end px-2">
+                        <h2 className="text-xs font-black text-zinc-400 uppercase tracking-[0.2em] italic">Inventario Pro</h2>
+                        <button className="text-[#FF4D00] text-[10px] font-black uppercase">Filtros</button>
+                    </div>
+
+                    {products.map(product => (
+                        <div key={product.id} className="bg-white p-4 rounded-[2rem] border border-zinc-100 shadow-sm flex items-center gap-4 group">
+                            <div className="w-20 h-20 rounded-2xl overflow-hidden bg-zinc-100 relative shadow-inner flex-shrink-0">
+                                <img src={product.image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                {product.isHot && (
+                                    <div className="absolute top-1 right-1 bg-orange-600 p-1 rounded-lg">
+                                        <Zap size={10} className="text-white" fill="currentColor" />
+                                    </div>
+                                )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-start">
+                                    <p className="text-[8px] font-black text-zinc-300 uppercase mb-0.5">{product.id}</p>
+                                    <span className={`text-[8px] font-black px-2 py-0.5 rounded-full uppercase ${product.stock > 10 ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'}`}>
+                                        {product.stock > 10 ? 'Stock OK' : 'Crítico'}
+                                    </span>
+                                </div>
+                                <h3 className="text-[11px] font-black text-zinc-800 uppercase italic line-clamp-1 mb-1">{product.name}</h3>
+                                <p className="text-orange-600 font-black text-md tracking-tighter">${product.price}</p>
+                                
+                                <div className="mt-3 flex gap-2">
+                                    <button 
+                                        onClick={() => handleSale(product.id)}
+                                        className="flex-1 bg-zinc-900 text-white py-2 rounded-xl text-[8px] font-black uppercase active:scale-95 transition-transform"
+                                    >
+                                        Vender
+                                    </button>
+                                    <button className="p-2 bg-zinc-50 rounded-xl text-zinc-400">
+                                        <MoreVertical size={14} />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+
+                    <button className="w-full border-2 border-dashed border-zinc-200 p-6 rounded-[2rem] flex flex-col items-center justify-center gap-2 text-zinc-300 hover:text-orange-500 hover:border-orange-200 transition-all">
+                        <Plus size={24} />
+                        <span className="text-[10px] font-black uppercase italic tracking-widest">Nuevo Producto</span>
+                    </button>
+                </div>
+            )}
+        </main>
+
+        {/* Navbar Flotante */}
+        <nav className="absolute bottom-8 left-8 right-8 h-20 bg-white/90 backdrop-blur-xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/50 flex items-center justify-around px-4 z-50">
+            <button 
+                onClick={() => setActiveTab('home')}
+                className={`flex flex-col items-center gap-1 transition-all ${activeTab === 'home' ? 'text-[#FF4D00]' : 'text-zinc-300'}`}
+            >
+                <Home size={22} fill={activeTab === 'home' ? "currentColor" : "none"} />
+            </button>
+            <button className="flex flex-col items-center gap-1 text-zinc-300">
+                <BarChart2 size={22} />
+            </button>
+            <button className="bg-zinc-900 w-14 h-14 rounded-2xl flex items-center justify-center -mt-12 shadow-xl shadow-zinc-400 border-4 border-white active:scale-90 transition-transform">
+                <Plus size={24} color="white" strokeWidth={3} />
+            </button>
+            <button 
+                onClick={() => setActiveTab('inventory')}
+                className={`flex flex-col items-center gap-1 transition-all ${activeTab === 'inventory' ? 'text-[#FF4D00]' : 'text-zinc-300'}`}
+            >
+                <LayoutDashboard size={22} fill={activeTab === 'inventory' ? "currentColor" : "none"} />
+            </button>
+            <button className="flex flex-col items-center gap-1 text-zinc-300">
+                <Settings size={22} />
+            </button>
+        </nav>
+
+        {/* Indicador de Home para Android */}
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-zinc-200 rounded-full"></div>
+      </div>
+    </div>
+  );
+};
+
+// Mock de iconos faltantes para el componente
+const BarChart2 = ({ size, className }) => <TrendingUp size={size} className={className} />;
+const Settings = ({ size, className }) => <Zap size={size} className={className} />;
+
+export default App;
